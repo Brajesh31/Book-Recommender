@@ -1,3 +1,5 @@
+# Large source datasets and generated artifacts are stored with Git LFS.
+# Git LFS must be installed and configured before cloning/pulling these files.
 *.pkl filter=lfs diff=lfs merge=lfs -text
 *.csv filter=lfs diff=lfs merge=lfs -text
 *.ipynb filter=lfs diff=lfs merge=lfs -text
