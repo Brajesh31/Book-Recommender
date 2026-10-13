@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: >-
+  If you use this project, please cite it using the metadata below.
+title: Book Recommender
+abstract: >-
+  A small Flask demonstration that presents popular books and recommends
+  similar titles from precomputed book-rating data and model artifacts.
+authors:
+  - family-names: Kumar
+    given-names: Brajesh
+    alias: brajesh31
+repository-code: 'https://github.com/Brajesh31/Book-Recommender'
+license: MIT
+type: software
