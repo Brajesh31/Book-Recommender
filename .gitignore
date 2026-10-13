@@ -1,1 +1,28 @@
-venv
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments and local configuration
+venv/
+.venv/
+env/
+.env
+.env.*
+!.env.example
+
+# Notebook and editor state
+.ipynb_checkpoints/
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Operating system files
+.DS_Store
+Thumbs.db
