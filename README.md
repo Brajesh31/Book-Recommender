@@ -116,4 +116,4 @@ Bug reports and focused improvements are welcome. Read [CONTRIBUTING.md](CONTRIB
 
 The project source is provided under the MIT License; see [LICENSE](LICENSE). Dataset, model artifact, and book-cover rights may be separate and must be checked with their respective sources.
 
-Last updated: 2026-11-09 20:27 UTC
+Last updated: 2026-11-10 03:12 UTC
