@@ -1,49 +1,214 @@
-# Book Recommendation System
+# 📚 Book Recommendation System | Bookwish
 
-This repository contains a small Flask website for browsing popular books and finding similar titles from a precomputed item-similarity model. The templates brand the site **Bookwish**. The model and app use the supplied book and rating data; there is no user account system or database.
+<p align="center">
+  <img src="assets/diagrams/architecture.svg" alt="Bookwish architecture showing offline data preparation, pickle artifacts, Flask, templates, and browser" width="100%" />
+</p>
 
-> **Project status:** this is a learning/demo application. Recommendations require an exact book-title match, the app runs Flask's debug server when started directly, and the model artifacts are loaded with Python pickle. Review [Current behavior and limitations](#current-behavior-and-limitations) and [SECURITY.md](SECURITY.md) before exposing it publicly.
+<p align="center">
+  <b>A Flask-based book discovery demo powered by precomputed item-item collaborative filtering.</b>
+</p>
 
-## Contents
+<p align="center">
+  ![Python](https://img.shields.io/badge/Python-3.x-3776AB?logo=python&logoColor=white)
+  ![Flask](https://img.shields.io/badge/Flask-Web%20App-000000?logo=flask&logoColor=white)
+  ![NumPy](https://img.shields.io/badge/NumPy-Arrays-013243?logo=numpy&logoColor=white)
+  ![Pandas](https://img.shields.io/badge/Pandas-Data%20Processing-150458?logo=pandas&logoColor=white)
+  ![License](https://img.shields.io/badge/License-MIT-green.svg)
+  [![Issues](https://img.shields.io/github/issues/Brajesh31/Book-Recommender)](https://github.com/Brajesh31/Book-Recommender/issues)
+  [![Stars](https://img.shields.io/github/stars/Brajesh31/Book-Recommender)](https://github.com/Brajesh31/Book-Recommender/stargazers)
+</p>
 
-- [How it works](#how-it-works)
-- [Requirements](#requirements)
-- [Get the data and install](#get-the-data-and-install)
-- [Run locally](#run-locally)
-- [Routes](#routes)
-- [Model notebook](#model-notebook)
-- [Current behavior and limitations](#current-behavior-and-limitations)
-- [Data and privacy](#data-and-privacy)
-- [Documentation](#documentation)
-- [Contributing](#contributing)
-- [License](#license)
+> [!IMPORTANT]
+> **Project status: educational/demo application.** The current app requires an exact, case-sensitive title match. Unknown or blank titles can raise an unhandled error. It loads Python pickle artifacts at import time and enables Flask debug mode when run directly. Do not expose the development server or load untrusted pickle files. Read [Security](SECURITY.md) before deployment.
 
-## How it works
+## 🧭 Contents
 
-- The home page displays the 50 books in `popular.pkl`, with author, cover URL, rating count, and mean rating.
-- The recommendation form accepts a book title. The app looks up that exact title in `pt.pkl`, ranks cosine-similarity scores, skips the selected title, and displays up to four similar books.
-- `books.pkl`, `pt.pkl`, `popular.pkl`, and `similarity_scores.pkl` are precomputed artifacts loaded when `app.py` starts.
+- [✨ Project overview](#-project-overview)
+- [🎯 Features and current scope](#-features-and-current-scope)
+- [🧠 How recommendations work](#-how-recommendations-work)
+- [🏗️ Architecture](#️-architecture)
+- [🔄 Workflows and diagrams](#-workflows-and-diagrams)
+- [🗂️ Project structure](#️-project-structure)
+- [🧰 Technology stack](#-technology-stack)
+- [⚙️ Requirements](#️-requirements)
+- [🚀 Installation and setup](#-installation-and-setup)
+- [▶️ Run locally](#️-run-locally)
+- [🌐 Application routes](#-application-routes)
+- [📓 Model notebook and artifacts](#-model-notebook-and-artifacts)
+- [🧪 Testing and quality](#-testing-and-quality)
+- [🔐 Security, privacy, and accessibility](#-security-privacy-and-accessibility)
+- [⚠️ Current limitations](#️-current-limitations)
+- [📚 Documentation index](#-documentation-index)
+- [🤝 Contributing](#-contributing)
+- [🛣️ Roadmap](#️-roadmap)
+- [📄 License and data rights](#-license-and-data-rights)
 
-The training notebook builds the popularity table and a user-rating pivot matrix. It filters to users with more than 200 ratings and books with at least 50 ratings, fills missing ratings with zero, and calculates cosine similarity between books. The popularity list filters to titles with at least 250 ratings and keeps the top 50 by average rating.
+## ✨ Project overview
 
-## Requirements
+**Bookwish** is a small server-rendered Flask website for browsing a precomputed popular-books list and discovering titles similar to a selected book. The application uses Python, pandas, NumPy, Jinja templates, and precomputed model artifacts.
+
+The project separates offline data preparation from online inference:
+
+- **Offline:** the notebook processes book metadata and ratings, creates a user-title pivot table, computes item similarity, and exports pickle files.
+- **Online:** Flask loads those files into memory, handles browser requests, ranks candidate books, and renders HTML.
+
+There is no visitor account system, persistent preference store, database, or live model training in the current implementation.
+
+## 🎯 Features and current scope
+
+| Feature | What the repository currently does | Status |
+|---|---|---|
+| 🏆 Popular books | Displays the precomputed popular list from `popular.pkl` | Implemented |
+| 🔎 Similar-book search | Accepts a title and performs exact index lookup | Implemented, limited |
+| 📚 Recommendation cards | Displays up to four candidates with title, author, and cover URL | Implemented |
+| 🧮 Collaborative filtering | Uses precomputed item-item similarity values | Offline notebook workflow |
+| 🗃️ Dataset processing | Uses books, ratings, and user CSV files | Notebook workflow |
+| 👤 Personal accounts | No authentication or user profiles | Not implemented |
+| 💾 Saved books | No persistent visitor preferences | Not implemented |
+| 🔌 JSON API | Routes return rendered HTML | Not implemented |
+| 🔄 Online retraining | Model is not retrained per request | Not implemented |
+
+## 🧠 How recommendations work
+
+The notebook documents the following filtering and transformation process:
+
+1. Load book metadata and rating records.
+2. Retain users with more than 200 ratings.
+3. Retain books with at least 50 ratings.
+4. Construct a user-by-book rating pivot table.
+5. Fill missing ratings with zero.
+6. Calculate cosine similarity between book vectors.
+7. Build a popularity ranking using titles with at least 250 ratings.
+8. Keep the top 50 popular titles by average rating.
+9. Export the resulting objects as pickle artifacts.
+
+At request time, Flask finds the submitted title in `pt.index`, reads the corresponding similarity row, sorts candidates by score, skips the selected title, and resolves metadata from `books.pkl`.
+
+<p align="center">
+  <img src="assets/diagrams/recommendation-flow.svg" alt="Recommendation flow from visitor title submission through exact lookup, similarity ranking, metadata lookup, and HTML rendering" width="100%" />
+</p>
+
+**Important model invariant:** row `i` in `similarity_scores.pkl` must correspond to `pt.index[i]`. All model files must come from the same build.
+
+See [Model Methodology](docs/model-methodology.md) for the detailed process and evaluation requirements.
+
+## 🏗️ Architecture
+
+<p align="center">
+  <img src="assets/diagrams/data-lineage.svg" alt="Data lineage from Books.csv, Ratings.csv, and Users.csv through notebook transformations to four pickle artifacts" width="100%" />
+</p>
+
+### Runtime components
+
+| Component | Responsibility |
+|---|---|
+| `app.py` | Loads artifacts and defines Flask routes |
+| `templates/index.html` | Popular-books page |
+| `templates/recommend.html` | Recommendation form and results |
+| `popular.pkl` | Popularity table |
+| `pt.pkl` | Title-indexed pivot table |
+| `books.pkl` | Book metadata lookup |
+| `similarity_scores.pkl` | Item-item similarity matrix |
+| `book_recommendation_model.ipynb` | Offline analysis and model preparation |
+
+The application has no database or separate API service. Pickle objects are loaded into process memory during module import.
+
+## 🔄 Workflows and diagrams
+
+- [System architecture source](docs/diagrams/architecture.mmd)
+- [Recommendation pipeline source](docs/diagrams/recommendation-pipeline.mmd)
+- [HTTP request sequence](docs/diagrams/request-sequence.mmd)
+- [Data lineage](docs/diagrams/data-lineage.mmd)
+- [Rendered SVG diagrams](assets/diagrams/README.md)
+
+## 🗂️ Project structure
+
+```text
+Book-Recommender/
+├── .github/
+│   ├── ISSUE_TEMPLATE/              # Bug, feature, and documentation forms
+│   ├── workflows/                  # Quality, security, and README workflows
+│   ├── PULL_REQUEST_TEMPLATE.md
+│   └── dependabot.yml
+├── assets/
+│   └── diagrams/                   # Original SVG architecture and flow visuals
+├── docs/
+│   ├── diagrams/                   # Mermaid source diagrams
+│   ├── templates/                  # ADR, test, incident, data, release templates
+│   ├── README.md                   # Documentation index
+│   ├── architecture.md
+│   ├── model-methodology.md
+│   ├── data-dictionary.md
+│   ├── api.md
+│   ├── security.md
+│   ├── privacy.md
+│   ├── accessibility.md
+│   ├── testing.md
+│   ├── deployment.md
+│   └── ...                         # Operations, performance, support, and guides
+├── templates/
+│   ├── index.html                  # Popular books
+│   └── recommend.html              # Search and recommendation results
+├── Books.csv                       # Git LFS source data
+├── Ratings.csv                     # Git LFS ratings data
+├── Users.csv                       # Git LFS user attributes
+├── app.py                          # Flask entry point and routes
+├── book_recommendation_model.ipynb # Offline model workflow
+├── books.pkl                       # Git LFS model artifact
+├── popular.pkl                     # Git LFS model artifact
+├── pt.pkl                          # Git LFS model artifact
+├── similarity_scores.pkl           # Git LFS model artifact
+├── requirements.txt
+├── CODE_OF_CONDUCT.md
+├── CONTRIBUTING.md
+├── LICENSE
+├── README.md
+├── ROADMAP.md
+├── SECURITY.md
+└── SUPPORT.md
+```
+
+For the full explanation of each important file, see [Project Structure](docs/project-structure.md).
+
+## 🧰 Technology stack
+
+| Technology | Role |
+|---|---|
+| Python | Application and model workflow |
+| Flask | Server-side routing and rendering |
+| NumPy | Similarity array operations |
+| pandas | DataFrames and preprocessing |
+| Jinja2 | HTML templates through Flask |
+| scikit-learn | Notebook cosine similarity dependency, not currently listed in runtime requirements |
+| Gunicorn | Production WSGI server |
+| Git LFS | Large CSV, notebook, and pickle storage |
+
+## ⚙️ Requirements
 
 - Python 3 and pip.
-- Git LFS to retrieve the large CSV, notebook, and pickle files tracked by `.gitattributes`.
-- For rerunning the notebook: Jupyter and scikit-learn in addition to the packages in `requirements.txt`. `scikit-learn` is used by the notebook but is not currently listed in that file.
+- Git and Git LFS.
+- A compatible Python environment for the committed pickle artifacts.
+- Jupyter and scikit-learn if rerunning the notebook.
+- Sufficient memory for the loaded model objects. Multiple WSGI workers may each load their own copy.
 
-## Get the data and install
+Dependency versions are currently unpinned. See [Dependencies](docs/dependencies.md) and [Compatibility](docs/compatibility.md).
 
-Clone the repository with Git LFS available, then ensure the LFS objects are downloaded:
+## 🚀 Installation and setup
 
-```powershell
+### 1. Clone with Git LFS
+
+```bash
 git lfs install
 git clone https://github.com/Brajesh31/Book-Recommender.git
-Set-Location Book-Recommender
+cd Book-Recommender
 git lfs pull
 ```
 
-Create and activate a virtual environment, then install the web app dependencies:
+Confirm that `Books.csv`, `Ratings.csv`, `Users.csv`, the notebook, and all four pickle artifacts are real files, not short Git LFS pointer text.
+
+### 2. Create a virtual environment
+
+Windows PowerShell:
 
 ```powershell
 py -m venv .venv
@@ -52,68 +217,134 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-On macOS/Linux, activate the environment with `source .venv/bin/activate` instead. `requirements.txt` currently leaves package versions unpinned, so installs are not guaranteed to be reproducible over time.
+macOS/Linux:
 
-The app expects these four pickle files in the current working directory: `popular.pkl`, `pt.pkl`, `books.pkl`, and `similarity_scores.pkl`. Keep the CSV datasets in the repository root if you plan to rerun the notebook.
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
 
-## Run locally
+### 3. Verify runtime dependencies
 
-From the repository root with the virtual environment active:
+```bash
+python -c "import flask, numpy, pandas; print('Runtime imports OK')"
+python -m py_compile app.py
+```
 
-```powershell
+These checks do not validate pickle safety or artifact compatibility. Only load trusted artifacts.
+
+## ▶️ Run locally
+
+From the repository root:
+
+```bash
 python app.py
 ```
 
-Open <http://127.0.0.1:5000>. The direct-run path enables Flask debug mode; use it only on a local development machine. See [Deployment](docs/deployment.md) for a WSGI server setup.
+Open <http://127.0.0.1:5000>. The direct-run path enables Flask debug mode. It is for local development only.
 
-## Routes
+### Production WSGI example
 
-| Method | Path | Purpose |
-| --- | --- | --- |
-| `GET` | `/` | Render the top-50 popular books page. |
-| `GET` | `/recommend` | Render the book-title recommendation form. |
-| `POST` | `/recommend_books` | Find similar titles for the submitted exact book name and render them. |
+```bash
+gunicorn --workers 2 --bind 0.0.0.0:8000 app:app
+```
 
-See [HTTP routes](docs/api.md) for request fields and current error behavior.
+Choose workers based on measured memory use. Configure HTTPS, network controls, process supervision, and resource limits at the hosting layer. See [Deployment](docs/deployment.md).
 
-## Model notebook
+## 🌐 Application routes
 
-`book_recommendation_model.ipynb` documents the dataset exploration, popularity ranking, rating pivot, cosine similarity, and pickle export. It currently reads CSVs from `/content/`, which is a Google Colab-style path; change those paths for a local Jupyter environment. The notebook also imports scikit-learn, which is not in `requirements.txt`.
+| Method | Path | Purpose | Response |
+|---|---|---|---|
+| `GET` | `/` | Render popular books | HTML |
+| `GET` | `/recommend` | Render title form | HTML |
+| `POST` | `/recommend_books` | Find similar books from `user_input` | HTML |
 
-The web app consumes the committed pickle artifacts and does not retrain the model at startup. Treat pickle files as trusted executable serialization: only load artifacts from a source you control.
+The POST field must currently match a title in the trained index exactly. The routes do not form a versioned JSON API. See [API and Routes](docs/api.md).
 
-## Current behavior and limitations
+## 📓 Model notebook and artifacts
 
-- Recommendation lookup is an exact, case-sensitive book-title lookup. A missing or unknown title currently causes an indexing error rather than a friendly validation message.
-- The model is item-based and precomputed. It does not personalize results from a current visitor's account or preferences.
-- The app uses the development Flask server with `debug=True` when run through `python app.py`; do not use that server for production.
-- The app does not validate the pickle artifacts at startup and loads all of them into memory when the module is imported.
-- There is no automated test suite or test command in the repository.
-- The CSV data, derived artifacts, and cover-image URLs have no provenance or separate license documentation in this repository. Confirm rights and privacy requirements before redistributing or deploying them.
+The notebook currently reads CSV files from a Colab-style `/content/` path. Local execution requires adapting those paths. The notebook imports scikit-learn, which is not listed in the current `requirements.txt`.
 
-## Data and privacy
+| Artifact | Role |
+|---|---|
+| `popular.pkl` | Top popular book records |
+| `pt.pkl` | Title-indexed user-rating pivot |
+| `books.pkl` | Metadata lookup table |
+| `similarity_scores.pkl` | Similarity matrix aligned with pivot rows |
 
-The repository includes `Books.csv`, `Ratings.csv`, and `Users.csv`. Their columns include book metadata and cover-image URLs, user IDs and ratings, and user location/age fields. The notebook loads the users table for exploration but the current recommendation calculation uses the ratings and books tables. Handle these files and the derived user-rating matrix as potentially sensitive data; do not publish additional personal data or expose the artifacts through an untrusted pickle source.
+**Pickle warning:** Python pickle deserialization can execute code. Never load a model artifact from an untrusted contributor, upload, or URL. See [Security Review](docs/security.md).
 
-Book covers are loaded from URLs in the dataset, so visitors' browsers contact those image hosts. See [Security](SECURITY.md) and [Database and data files](docs/database.md) for handling notes.
+## 🧪 Testing and quality
 
-## Documentation
+The repository currently has no application test suite. A GitHub Actions quality workflow checks Python syntax, Jinja template compilation, and the presence of core documentation. A separate scheduled security workflow audits declared Python dependencies.
 
-- [Architecture](docs/architecture.md)
-- [Installation](docs/installation.md)
-- [Development](docs/development.md)
-- [Deployment](docs/deployment.md)
-- [HTTP routes](docs/api.md)
-- [Database and data files](docs/database.md)
-- [Troubleshooting](docs/troubleshooting.md)
-- [FAQ](docs/faq.md)
+Run the basic local checks:
 
-## Contributing
+```bash
+python -m py_compile app.py
+```
 
-Bug reports and focused improvements are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). Report suspected vulnerabilities privately using [SECURITY.md](SECURITY.md), not in a public issue.
+This is not a substitute for route, artifact-contract, model-quality, or accessibility tests. See [Testing Strategy](docs/testing.md).
 
-## License
+## 🔐 Security, privacy, and accessibility
 
-The project source is provided under the MIT License; see [LICENSE](LICENSE). Dataset, model artifact, and book-cover rights may be separate and must be checked with their respective sources.
+- **Security:** debug mode, pickle trust, input validation, and artifact integrity require attention. See [SECURITY.md](SECURITY.md) and [Security Review](docs/security.md).
+- **Privacy:** source data includes user identifiers, location, and age fields. Verify rights and minimize personal data. See [Privacy](docs/privacy.md).
+- **Accessibility:** the current templates need explicit form labels, descriptive image alternatives, focus review, and contrast testing. See [Accessibility](docs/accessibility.md).
 
-Last updated: 2026-11-16 20:08 UTC
+## ⚠️ Current limitations
+
+- Exact and case-sensitive title matching only.
+- Blank or unknown titles can cause an unhandled index error.
+- No account system, personalized visitor history, or saved preferences.
+- No database or JSON API.
+- Pickle artifacts load during module import without an explicit compatibility manifest.
+- Flask debug mode is enabled by the direct-run entry point.
+- Notebook paths assume `/content/`.
+- scikit-learn is not listed in `requirements.txt`.
+- Dependencies are not pinned.
+- Dataset provenance, license, privacy terms, and cover-image rights are not established in this repository.
+- No automated application test suite or verified model-quality metrics are included.
+
+See the detailed [Limitations Register](docs/limitations.md) and [Technical Debt](docs/technical-debt.md).
+
+## 📚 Documentation index
+
+| Topic | Guide |
+|---|---|
+| Documentation hub | [docs/README.md](docs/README.md) |
+| Product overview | [Overview](docs/overview.md) |
+| Requirements | [Requirements](docs/requirements.md) |
+| Architecture | [Architecture](docs/architecture.md) |
+| Project structure | [Project Structure](docs/project-structure.md) |
+| Installation and configuration | [Installation](docs/installation.md) · [Configuration](docs/configuration.md) |
+| Development and workflows | [Development](docs/development.md) · [Workflows](docs/workflows.md) |
+| Routes and data | [API](docs/api.md) · [Database](docs/database.md) · [Data Dictionary](docs/data-dictionary.md) |
+| Model methodology | [Model Methodology](docs/model-methodology.md) |
+| Security and privacy | [Security](docs/security.md) · [Privacy](docs/privacy.md) |
+| Accessibility and testing | [Accessibility](docs/accessibility.md) · [Testing](docs/testing.md) |
+| Performance and compatibility | [Performance](docs/performance.md) · [Compatibility](docs/compatibility.md) |
+| Operations and deployment | [Operations](docs/operations.md) · [Deployment](docs/deployment.md) · [Release Process](docs/release-process.md) |
+| Errors and support | [Error Handling](docs/error-handling.md) · [Troubleshooting](docs/troubleshooting.md) · [FAQ](docs/faq.md) |
+| Maintenance | [Dependencies](docs/dependencies.md) · [Technical Debt](docs/technical-debt.md) · [Limitations](docs/limitations.md) |
+| Reference | [Commands](docs/commands.md) · [Examples](docs/examples.md) · [Glossary](docs/glossary.md) |
+
+## 🤝 Contributing
+
+Contributions should be focused, tested, and documented. Read [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). Use GitHub issue and pull request templates. Report suspected vulnerabilities privately through [SECURITY.md](SECURITY.md), never in a public issue.
+
+## 🛣️ Roadmap
+
+See [ROADMAP.md](ROADMAP.md) for planned product, model, security, and quality improvements. Roadmap items are proposals, not completed capabilities.
+
+## 📄 License and data rights
+
+The project source is provided under the MIT License. See [LICENSE](LICENSE). The MIT source license does not automatically grant rights to the datasets, ratings, user attributes, derived model data, or book-cover images. Verify each source's terms before redistributing or deploying those materials.
+
+---
+
+<p align="center">
+  Built for book discovery 📚 · <a href="docs/README.md">Explore the documentation</a> · <a href="CONTRIBUTING.md">Contribute</a>
+</p>
