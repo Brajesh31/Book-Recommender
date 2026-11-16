@@ -19,7 +19,7 @@
 [![Stars](https://img.shields.io/github/stars/Brajesh31/Book-Recommender)](https://github.com/Brajesh31/Book-Recommender/stargazers)
 
 > [!IMPORTANT]
-> **Project status: educational/demo application.** The current app requires an exact, case-sensitive title match. Unknown or blank titles can raise an unhandled error. It loads Python pickle artifacts at import time and enables Flask debug mode when run directly. Do not expose the development server or load untrusted pickle files. Read [Security](SECURITY.md) before deployment.
+> **Project status: educational/demo application.** The current app requires an exact, case-sensitive title match. Blank and unknown titles now receive explicit HTTP error feedback, and the direct-run entry point disables debug mode. The app still loads Python pickle artifacts at import time, so only trusted model files may be used. Do not expose the development server or load untrusted pickle files. Read [Security](SECURITY.md) before deployment.
 
 ## 🧭 Contents
 
@@ -243,7 +243,7 @@ From the repository root:
 python app.py
 ```
 
-Open <http://127.0.0.1:5000>. The direct-run path enables Flask debug mode. It is for local development only.
+Open <http://127.0.0.1:5000>. The direct-run path keeps debug mode disabled. For production, use Gunicorn or a managed WSGI server.
 
 ### Production WSGI example
 
@@ -278,7 +278,7 @@ The notebook currently reads CSV files from a Colab-style `/content/` path. Loca
 
 ## 🧪 Testing and quality
 
-A small pytest suite checks Jinja template rendering and HTML escaping. It does not yet exercise Flask routes, load model artifacts, evaluate recommendation quality, or verify accessibility. The GitHub Actions quality workflow runs these tests, compiles Python and Jinja templates, and checks core docs/assets. A separate scheduled security workflow audits declared Python dependencies.
+The pytest suite checks Jinja rendering and escaping, plus key Flask routes using mocked in-memory artifacts. It does not validate real model files, recommendation quality, or accessibility conformance. The GitHub Actions quality workflow runs these tests, compiles Python and Jinja templates, and checks core docs/assets. A separate scheduled security workflow audits declared Python dependencies.
 
 Run the basic local checks:
 
@@ -297,7 +297,7 @@ This is not a substitute for route, artifact-contract, model-quality, or accessi
 ## ⚠️ Current limitations
 
 - Exact and case-sensitive title matching only.
-- Blank or unknown titles can cause an unhandled index error.
+- Blank and unknown titles are handled with HTTP 400/404 feedback, but matching remains exact and case-sensitive.
 - No account system, personalized visitor history, or saved preferences.
 - No database or JSON API.
 - Pickle artifacts load during module import without an explicit compatibility manifest.
