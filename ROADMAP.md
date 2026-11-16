@@ -1,30 +1,45 @@
-# Roadmap
+# 🛣️ Roadmap
 
-This roadmap records possible improvements for the Book Recommender. It is a planning document, not a promise of delivery dates. Priorities may change as the project evolves.
+This roadmap records possible improvements for Bookwish. It is a planning document, not a promise of delivery dates. Priorities may change as the project evolves.
 
-## Planned foundations
+## 🔴 Priority 1: Safety and reliability
+- [ ] Validate blank, oversized, and unknown submitted titles.
+- [ ] Return a clear no-match state instead of an unhandled index error.
+- [ ] Remove debug mode from production startup paths.
+- [ ] Validate model artifact schemas, dimensions, and pivot/similarity row alignment.
+- [ ] Add a trusted artifact manifest and checksum verification.
+- [ ] Replace debug prints with privacy-aware structured logging.
+- [ ] Review whether pickle can be replaced with a safer data serialization format.
 
-- Validate submitted titles and show a helpful message when a title is missing or is not present in the trained index.
-- Load model artifacts through a controlled startup path and document that Python pickle files must only come from a trusted source.
-- Make production startup settings explicit: keep Flask debug mode disabled outside local development and document the WSGI command.
-- Declare and pin a reproducible dependency set, including the scikit-learn dependency used by the notebook if it remains part of the workflow.
-- Replace or parameterize notebook paths that currently assume a Google Colab `/content` directory.
+## 🟠 Priority 2: Reproducible model workflow
+- [ ] Parameterize notebook input paths instead of hard-coding `/content/`.
+- [ ] Separate runtime and training dependencies.
+- [ ] Pin and lock dependencies after compatibility testing.
+- [ ] Record dataset source, version, license, checksums, and permitted use.
+- [ ] Record each model build's configuration and artifact checksums.
+- [ ] Add repeatable offline recommendation evaluation.
 
-## Data and model improvements
+## 🟡 Priority 3: Product and accessibility
+- [ ] Add useful form labels, validation feedback, and no-results messaging.
+- [ ] Improve image alternatives, focus visibility, and keyboard usability.
+- [ ] Measure text and control contrast.
+- [ ] Add responsive and cross-browser verification.
+- [ ] Consider title normalization or fuzzy matching with explicit ambiguity handling.
+- [ ] Evaluate cold-start and catalog coverage limitations.
 
-- Record the source, version, license, and permitted use of the book, rating, and user datasets and the cover-image URLs before redistributing them.
-- Document the training filters, popularity thresholds, collaborative-filtering inputs, and artifact regeneration steps alongside generated artifacts.
-- Review whether user demographic fields are needed; avoid collecting, exposing, or logging information that is not required for recommendations.
-- Add a clear model artifact compatibility/version check so stale or mismatched files fail with actionable errors.
+## 🟢 Priority 4: Quality and operations
+- [ ] Add unit and Flask route tests.
+- [ ] Add artifact-contract tests.
+- [ ] Add browser-level accessibility tests.
+- [ ] Add health/readiness checks only after defining safe semantics.
+- [ ] Define monitoring, backup, and rollback procedures for a real deployment.
 
-## Product and quality improvements
+## ✅ Documentation and repository foundation
+- [x] Expanded README and documentation index.
+- [x] Added project-specific model, data, security, privacy, accessibility, testing, and operations guides.
+- [x] Added Mermaid source diagrams and SVG visual assets.
+- [x] Added GitHub issue forms, pull request template, Dependabot, and quality/security workflows.
+- [x] Added reusable engineering and release templates.
 
-- Add automated checks for the home page, recommendation form, valid title result, and invalid title handling.
-- Improve accessibility, form feedback, and behavior on small screens.
-- Consider a documented deployment example with resource requirements and a safe update procedure for model files.
-- Evaluate recommendation quality with a repeatable offline metric and representative, properly licensed data.
-
-## Completed in this documentation pass
-
-- Added repository overview, setup, architecture, data, route, deployment, support, and troubleshooting documentation.
-- Added contribution, security, and community conduct guidance and standard repository metadata/configuration.
+## 📌 Prioritization rule
+Close a roadmap item only after implementation, tests, documentation, and verification evidence are available. A documentation description does not mean the underlying product feature exists.
