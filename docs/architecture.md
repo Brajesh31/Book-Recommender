@@ -29,10 +29,10 @@ The CSV files are source data. The pickle files are derived runtime artifacts. T
 - GET /recommend renders the recommendation form.
 - POST /recommend_books reads the form field user_input, looks for an exact match in pt.index, ranks that row's similarity scores, skips the matching title, and renders up to four similar books using books.pkl metadata.
 
-The routes return HTML templates; they do not return a documented JSON API. A missing or unknown title currently produces an unhandled index lookup error. The app also prints recommendation data to standard output.
+The routes return HTML templates; they do not return a documented JSON API. Blank and unknown titles are handled with explicit HTTP 400/404 feedback. Candidate metadata rows that are missing are skipped. The route no longer prints recommendation records to standard output.
 
 ## Runtime and constraints
 
-All four pickle files are loaded when the module is imported, so a missing, incompatible, or untrusted artifact can prevent startup or execute unsafe deserialization code. Keep the files from one trusted training run together. The app expects the working directory to contain the artifacts and templates. The displayed cover images use remote URLs from the book metadata; image availability and third-party hosting are outside this app's control.
+All four pickle files are loaded when the module is imported, so a missing, incompatible, or untrusted artifact can prevent startup or execute unsafe deserialization code. Keep the files from one trusted training run together. The app expects the working directory to contain the artifacts and templates. The direct-run entry point disables debug mode. The displayed cover images use remote URLs from the book metadata; image availability and third-party hosting are outside this app's control.
 
 The current application has no explicit persistence layer or user accounts. Do not treat transient form submissions as stored preferences. Review the supplied dataset's provenance, license, privacy terms, and image rights before redistribution or public deployment.
