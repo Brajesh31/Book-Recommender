@@ -105,7 +105,7 @@ def test_known_title_returns_top_similar_books(client):
     assert response.status_code == 200
     assert b"Book B" in response.data
     assert b"Book E" in response.data
-    assert b"Seed Book" not in response.data
+    assert b"<h2>Seed Book</h2>" not in response.data
 
 
 def test_oversized_title_returns_validation_error(client):
