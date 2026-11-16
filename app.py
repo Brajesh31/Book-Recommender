@@ -1,7 +1,10 @@
 from flask import Flask, render_template, request
 import pickle
+
 import numpy as np
 
+# Model files are trusted, precomputed artifacts. Never load visitor-supplied
+# pickle files: Python pickle deserialization can execute arbitrary code.
 popular_df = pickle.load(open("popular.pkl", "rb"))
 pt = pickle.load(open("pt.pkl", "rb"))
 books = pickle.load(open("books.pkl", "rb"))
@@ -24,31 +27,93 @@ def index():
 
 @app.route("/recommend")
 def recommend_ui():
-    return render_template("recommend.html")
+    return render_template("recommend.html", data=[], query="")
 
 
-@app.route("/recommend_books", methods=["post"])
+@app.route("/recommend_books", methods=["POST"])
 def recommend():
-    user_input = request.form.get("user_input")
-    index = np.where(pt.index == user_input)[0][0]
-    similar_items = sorted(
-        list(enumerate(similarity_scores[index])), key=lambda x: x[1], reverse=True
-    )[1:5]
+    user_input = (request.form.get("user_input") or "").strip()
+
+    if not user_input:
+        return (
+            render_template(
+                "recommend.html",
+                data=[],
+                query=user_input,
+                error="Enter a book title before requesting recommendations.",
+            ),
+            400,
+        )
+
+    matches = np.flatnonzero(pt.index == user_input)
+    if matches.size == 0:
+        return (
+            render_template(
+                "recommend.html",
+                data=[],
+                query=user_input,
+                error="No exact title match was found. Check the spelling and try a title from the trained catalogue.",
+            ),
+            404,
+        )
+
+    selected_index = int(matches[0])
+    if selected_index >= len(similarity_scores):
+        app.logger.error("Model artifact mismatch: similarity row is missing")
+        return (
+            render_template(
+                "recommend.html",
+                data=[],
+                query=user_input,
+                error="Recommendations are temporarily unavailable. Please try again later.",
+            ),
+            503,
+        )
+
+    ranked_items = sorted(
+        enumerate(similarity_scores[selected_index]),
+        key=lambda item: item[1],
+        reverse=True,
+    )
+    candidate_indices = [
+        int(candidate_index)
+        for candidate_index, _score in ranked_items
+        if candidate_index != selected_index
+    ][:4]
 
     data = []
-    for i in similar_items:
-        item = []
-        temp_df = books[books["Book-Title"] == pt.index[i[0]]]
-        item.extend(list(temp_df.drop_duplicates("Book-Title")["Book-Title"].values))
-        item.extend(list(temp_df.drop_duplicates("Book-Title")["Book-Author"].values))
-        item.extend(list(temp_df.drop_duplicates("Book-Title")["Image-URL-M"].values))
+    for candidate_index in candidate_indices:
+        if candidate_index >= len(pt.index):
+            continue
 
-        data.append(item)
+        candidate_title = pt.index[candidate_index]
+        matching_books = books[books["Book-Title"] == candidate_title]
+        matching_books = matching_books.drop_duplicates("Book-Title")
 
-    print(data)
+        if matching_books.empty:
+            continue
 
-    return render_template("recommend.html", data=data)
+        book = matching_books.iloc[0]
+        data.append(
+            [
+                book["Book-Title"],
+                book["Book-Author"],
+                book["Image-URL-M"],
+            ]
+        )
+
+    return render_template(
+        "recommend.html",
+        data=data,
+        query=user_input,
+        message=(
+            "No recommendation details were available for this title."
+            if not data
+            else None
+        ),
+    )
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Debug mode must remain disabled by default. Use a WSGI server in production.
+    app.run(debug=False)
