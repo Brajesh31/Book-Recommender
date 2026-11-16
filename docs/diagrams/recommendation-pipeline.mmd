@@ -1,0 +1,13 @@
+flowchart TD
+  A["Book metadata + ratings"] --> B["Filter active users > 200 ratings"]
+  B --> C["Filter books >= 50 ratings"]
+  C --> D["Build user-title pivot table"]
+  D --> E["Fill missing ratings with zero"]
+  E --> F["Compute item cosine similarity"]
+  F --> G["Export pt.pkl + similarity_scores.pkl"]
+  A --> H["Popularity aggregation"]
+  H --> I["Keep books with >= 250 ratings"]
+  I --> J["Top 50 by average rating"]
+  J --> K["Export popular.pkl"]
+  G --> L["Flask exact-title lookup"]
+  K --> M["Home page"]
