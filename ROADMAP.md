@@ -3,7 +3,7 @@
 This roadmap records possible improvements for Bookwish. It is a planning document, not a promise of delivery dates. Priorities may change as the project evolves.
 
 ## 🔴 Priority 1: Safety and reliability
-- [x] Validate blank and unknown submitted titles; the HTML field also limits input to 200 characters.
+- [x] Validate blank, oversized, and unknown submitted titles on the server; the HTML field also limits input to 200 characters.
 - [x] Return a clear no-match state instead of an unhandled index error.
 - [x] Disable debug mode in the direct-run entry point; production still uses WSGI.
 - [ ] Validate model artifact schemas, dimensions, and pivot/similarity row alignment.
