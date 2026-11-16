@@ -23,8 +23,8 @@ This threat model covers the current browser-facing Flask app, its source CSVs, 
 | Threat | Possible impact | Current exposure | Mitigation |
 |---|---|---|---|
 | Malicious pickle artifact | Code execution at import | Direct `pickle.load` calls | Trusted build pipeline, restricted writes, safer serialization |
-| Unknown title input | Request error / availability degradation | Unsafe first-match indexing | Validate input and handle no-match |
-| Debugger exposed | Interactive code execution / information disclosure | Debug enabled by direct-run entry point | Never deploy dev server |
+| Unknown title input | Request error / availability degradation | Server now returns HTTP 404 for no-match; exact matching remains | Keep validation and regression tests |
+| Debugger exposed | Interactive code execution / information disclosure | Direct-run entry point now sets debug=False | Continue using WSGI and network controls |
 | Artifact mismatch | Wrong or broken recommendations | No compatibility manifest | Hash, schema, dimension, and alignment checks |
 | Dataset disclosure | Personal data exposure | User attributes and ratings in repository | Verify rights, minimize, restrict access |
 | Dependency compromise | Runtime compromise | Unpinned dependencies | Lock, audit, update with review |
