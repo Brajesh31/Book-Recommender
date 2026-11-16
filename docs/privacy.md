@@ -8,7 +8,7 @@ The running Flask app reads precomputed model artifacts. It does not implement u
 
 ## 2. Visitor interactions
 
-The visitor submits a book title using a standard HTML form. The current route processes the title in memory and renders recommendations. The handler currently prints recommendation data to standard output. Review this behavior before deployment and remove unnecessary output.
+The visitor submits a book title using a standard HTML form. The route processes the submitted title in memory and renders recommendations. The recommendation handler no longer prints result records to standard output. Hosting infrastructure may still record ordinary request metadata, so review its logging and retention settings.
 
 The templates request cover images from URLs contained in the book metadata. A browser contacting those image hosts may disclose network metadata to third parties. This is outside the application's direct control.
 
