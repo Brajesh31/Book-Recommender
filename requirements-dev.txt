@@ -1,0 +1,2 @@
+# Development and test dependencies
+pytest>=8.3,<9
