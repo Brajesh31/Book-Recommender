@@ -51,7 +51,10 @@ def client(monkeypatch):
     monkeypatch.setattr(pickle, "load", lambda _handle: next(artifacts))
     monkeypatch.setattr(builtins, "open", lambda *_args, **_kwargs: io.BytesIO())
     sys.modules.pop("app", None)
-    spec = importlib.util.spec_from_file_location("app", ROOT / "app.py")\n    module = importlib.util.module_from_spec(spec)\n    sys.modules["app"] = module\n    spec.loader.exec_module(module)
+    spec = importlib.util.spec_from_file_location("app", ROOT / "app.py")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules["app"] = module
+    spec.loader.exec_module(module)
     module.app.config.update(TESTING=True)
 
     yield module.app.test_client()
