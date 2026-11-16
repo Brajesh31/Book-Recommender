@@ -49,7 +49,19 @@ def client(monkeypatch):
     artifacts = iter([popular, pivot, metadata, similarity])
 
     monkeypatch.setattr(pickle, "load", lambda _handle: next(artifacts))
-    monkeypatch.setattr(builtins, "open", lambda *_args, **_kwargs: io.BytesIO())
+    original_open = builtins.open
+
+    def artifact_only_open(file, *args, **kwargs):
+        if Path(file).name in {
+            "popular.pkl",
+            "pt.pkl",
+            "books.pkl",
+            "similarity_scores.pkl",
+        }:
+            return io.BytesIO()
+        return original_open(file, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "open", artifact_only_open)
     sys.modules.pop("app", None)
     spec = importlib.util.spec_from_file_location("app", ROOT / "app.py")
     module = importlib.util.module_from_spec(spec)
