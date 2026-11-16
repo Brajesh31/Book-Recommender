@@ -45,6 +45,17 @@ def recommend():
             400,
         )
 
+    if len(user_input) > 200:
+        return (
+            render_template(
+                "recommend.html",
+                data=[],
+                query=user_input[:200],
+                error="Book titles must be 200 characters or fewer.",
+            ),
+            400,
+        )
+
     matches = np.flatnonzero(pt.index == user_input)
     if matches.size == 0:
         return (
