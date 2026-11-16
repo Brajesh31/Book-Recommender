@@ -8,10 +8,13 @@ import importlib
 import io
 import pickle
 import sys
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import pytest
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 @pytest.fixture
@@ -48,7 +51,7 @@ def client(monkeypatch):
     monkeypatch.setattr(pickle, "load", lambda _handle: next(artifacts))
     monkeypatch.setattr(builtins, "open", lambda *_args, **_kwargs: io.BytesIO())
     sys.modules.pop("app", None)
-    module = importlib.import_module("app")
+    spec = importlib.util.spec_from_file_location("app", ROOT / "app.py")\n    module = importlib.util.module_from_spec(spec)\n    sys.modules["app"] = module\n    spec.loader.exec_module(module)
     module.app.config.update(TESTING=True)
 
     yield module.app.test_client()
