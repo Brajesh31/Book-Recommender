@@ -1,0 +1,18 @@
+flowchart TB
+  subgraph Offline["Offline preparation"]
+    B["Books.csv"] --> NB["Jupyter notebook"]
+    R["Ratings.csv"] --> NB
+    U["Users.csv<br/>exploration input"] -.-> NB
+    NB --> P["popular.pkl"]
+    NB --> PT["pt.pkl"]
+    NB --> BK["books.pkl"]
+    NB --> SS["similarity_scores.pkl"]
+  end
+  subgraph Runtime["Flask runtime"]
+    W["Browser"] <-->|"HTTP / HTML"| F["Flask app.py"]
+    F --> T["Jinja templates"]
+    F --> P
+    F --> PT
+    F --> BK
+    F --> SS
+  end
