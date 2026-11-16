@@ -280,19 +280,22 @@ The notebook currently reads CSV files from a Colab-style `/content/` path. Loca
 
 The pytest suite checks Jinja rendering and escaping, plus key Flask routes using mocked in-memory artifacts. It does not validate real model files, recommendation quality, or accessibility conformance. The GitHub Actions quality workflow runs these tests, compiles Python and Jinja templates, and checks core docs/assets. A separate scheduled security workflow audits declared Python dependencies.
 
-Run the basic local checks:
+Run the checks locally:
 
 ```bash
-python -m py_compile app.py
+pip install -r requirements.txt
+pip install -r requirements-dev.txt
+python -m py_compile app.py tests/test_app.py tests/test_templates.py
+pytest -q
 ```
 
-This is not a substitute for route, artifact-contract, model-quality, or accessibility tests. See [Testing Strategy](docs/testing.md).
+The current route tests use mocked model artifacts. They do not validate the real pickle bundle, model quality, or accessibility conformance. See [Testing Strategy](docs/testing.md).
 
 ## 🔐 Security, privacy, and accessibility
 
-- **Security:** debug mode, pickle trust, input validation, and artifact integrity require attention. See [SECURITY.md](SECURITY.md) and [Security Review](docs/security.md).
+- **Security:** pickle trust and artifact integrity still require attention. Input validation and safe debug defaults have been added. See [SECURITY.md](SECURITY.md) and [Security Review](docs/security.md).
 - **Privacy:** source data includes user identifiers, location, and age fields. Verify rights and minimize personal data. See [Privacy](docs/privacy.md).
-- **Accessibility:** the current templates need explicit form labels, descriptive image alternatives, focus review, and contrast testing. See [Accessibility](docs/accessibility.md).
+- **Accessibility:** labels, descriptive image alternatives, skip links, and visible focus styles have been added. Manual keyboard, screen-reader, and contrast testing remains. See [Accessibility](docs/accessibility.md).
 
 ## ⚠️ Current limitations
 
