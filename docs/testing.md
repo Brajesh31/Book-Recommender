@@ -43,14 +43,7 @@ The quality workflow also compiles the Jinja templates and checks that key docum
 
 ## 5. Additional route and model tests to add
 
-Further tests should cover:
-- `GET /` renders the popular-books list.
-- `GET /recommend` renders the form.
-- valid `POST /recommend_books` returns result cards.
-- empty title returns validation feedback.
-- unknown title returns no-match feedback, not an exception.
-- missing or incompatible artifacts fail with an actionable startup error.
-- no raw stack trace is shown to visitors.
+Further tests should cover missing or incompatible artifact startup, matrix shape mismatch, non-finite scores, missing candidate metadata, generic error pages, and no raw stack traces. Add recommendation-quality evaluation only after defining a reproducible offline split and baseline.
 
 ## 6. Artifact contract tests
 
