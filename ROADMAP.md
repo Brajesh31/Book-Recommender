@@ -3,12 +3,12 @@
 This roadmap records possible improvements for Bookwish. It is a planning document, not a promise of delivery dates. Priorities may change as the project evolves.
 
 ## 🔴 Priority 1: Safety and reliability
-- [ ] Validate blank, oversized, and unknown submitted titles.
-- [ ] Return a clear no-match state instead of an unhandled index error.
-- [ ] Remove debug mode from production startup paths.
+- [x] Validate blank and unknown submitted titles; the HTML field also limits input to 200 characters.
+- [x] Return a clear no-match state instead of an unhandled index error.
+- [x] Disable debug mode in the direct-run entry point; production still uses WSGI.
 - [ ] Validate model artifact schemas, dimensions, and pivot/similarity row alignment.
 - [ ] Add a trusted artifact manifest and checksum verification.
-- [ ] Replace debug prints with privacy-aware structured logging.
+- [x] Remove recommendation result debug prints; structured operational logging remains future work.
 - [ ] Review whether pickle can be replaced with a safer data serialization format.
 
 ## 🟠 Priority 2: Reproducible model workflow
@@ -20,15 +20,15 @@ This roadmap records possible improvements for Bookwish. It is a planning docume
 - [ ] Add repeatable offline recommendation evaluation.
 
 ## 🟡 Priority 3: Product and accessibility
-- [ ] Add useful form labels, validation feedback, and no-results messaging.
-- [ ] Improve image alternatives, focus visibility, and keyboard usability.
+- [x] Add a visible form label, validation feedback, and no-results messaging.
+- [x] Add descriptive cover-image alternatives, visible focus styles, and a skip link; manual keyboard review remains.
 - [ ] Measure text and control contrast.
 - [ ] Add responsive and cross-browser verification.
 - [ ] Consider title normalization or fuzzy matching with explicit ambiguity handling.
 - [ ] Evaluate cold-start and catalog coverage limitations.
 
 ## 🟢 Priority 4: Quality and operations
-- [ ] Add unit and Flask route tests.
+- [x] Add basic Flask route and template tests using mocked model artifacts.
 - [ ] Add artifact-contract tests.
 - [ ] Add browser-level accessibility tests.
 - [ ] Add health/readiness checks only after defining safe semantics.
