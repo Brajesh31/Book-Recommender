@@ -39,7 +39,7 @@ The quality workflow also compiles the Jinja templates and checks that key docum
 
 - Home template renders a representative popular-book card.
 - Recommendation template renders a recommendation result.
-- Recommendation template escapes HTML-like user-controlled text.\n- Home route renders popular-book data with mocked artifacts.\n- Recommendation form renders its visible label.\n- Blank title returns HTTP 400.\n- Unknown title returns HTTP 404.\n- Known title returns similar-book cards without returning the selected title.
+- Recommendation template escapes HTML-like user-controlled text.\n- Home route renders popular-book data with mocked artifacts.\n- Recommendation form renders its visible label.\n- Blank title returns HTTP 400.\n- Unknown title returns HTTP 404.\n- Known title returns similar-book cards without listing the selected title as a recommendation.
 
 ## 5. Additional route and model tests to add
 
