@@ -6,7 +6,7 @@ This register tracks verified or source-observed engineering debt in Bookwish. P
 |---|---|---|---|---|
 | TD-01 | Critical | Model loading | Pickle objects are loaded directly at import | Restrict artifact trust and evaluate safer serialization |
 | TD-02 | Resolved | Runtime security | Direct app execution previously enabled debug mode | Direct-run entry point now sets debug=False; retain WSGI deployment for production |
-| TD-03 | Resolved | Request handling | Unknown or blank title previously raised IndexError | Server now returns HTTP 400/404 feedback and preserves safe rendering |
+| TD-03 | Resolved | Request handling | Unknown or blank title previously raised IndexError | Server now validates blank, oversized, and unknown titles with HTTP 400/404 feedback |
 | TD-04 | High | Artifact integrity | No manifest or row-alignment validation | Add versioned manifest, checksums, and shape checks |
 | TD-05 | Partially resolved | Testing | Basic route tests use mocked artifacts; artifact contract and model tests remain absent | Expand test coverage for real artifact validation and recommendation quality |
 | TD-06 | Medium | Reproducibility | Dependencies are not pinned | Select supported versions and create a lock strategy |
