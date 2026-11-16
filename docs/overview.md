@@ -45,13 +45,13 @@ This is item-based collaborative filtering, not a language model, semantic embed
 ## 6. Known constraints and risks
 
 - Matching is case-sensitive and exact.
-- Empty and unknown titles currently reach an unsafe array index operation.
+- Blank and unknown titles now return explicit validation feedback; exact and case-sensitive matching remains.
 - All four pickle files load during module import.
 - Pickle is executable serialization and must be trusted.
-- Direct execution enables Flask debug mode.
+- The direct-run entry point now disables debug mode; production should use a WSGI server.
 - Model artifact order must remain aligned with the pivot-table index.
 - Dataset provenance, license, consent, and image rights are not established by this repository.
-- No automated tests are currently shipped.
+- Basic Flask route and Jinja template tests are now included; real artifact integrity and model quality remain untested.
 
 ## 7. Success criteria for future improvements
 
