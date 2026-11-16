@@ -1,0 +1,29 @@
+name: "📝 Documentation improvement"
+description: Report missing, unclear, or incorrect project documentation.
+title: "[Docs]: "
+labels: ["documentation", "needs-triage"]
+body:
+  - type: input
+    id: page
+    attributes:
+      label: Page or file
+      placeholder: docs/architecture.md
+    validations:
+      required: true
+  - type: textarea
+    id: issue
+    attributes:
+      label: What is missing or incorrect?
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested correction
+  - type: checkboxes
+    id: safe
+    attributes:
+      label: Confirmation
+      options:
+        - label: I have not included secrets or personal data.
+          required: true
