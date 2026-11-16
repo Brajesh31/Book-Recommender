@@ -2,14 +2,23 @@ sequenceDiagram
   actor Visitor
   participant Browser
   participant Flask as Flask app.py
-  participant Model as In-memory pickle objects
+  participant Model as In-memory model objects
   participant Jinja as Jinja templates
   Visitor->>Browser: Enter a book title
   Browser->>Flask: POST /recommend_books
-  Flask->>Model: Find exact title in pt.index
-  Model-->>Flask: Index position and similarity row
-  Flask->>Model: Resolve top candidate metadata
-  Model-->>Flask: Title, author, cover URL
-  Flask->>Jinja: Render recommendation page
-  Jinja-->>Browser: HTML response
-  Note over Flask,Model: Current unknown-title handling can raise IndexError
+  Flask->>Flask: Trim and validate input
+  alt Blank or title exceeds 200 characters
+    Flask->>Jinja: Render validation feedback
+    Jinja-->>Browser: HTTP 400 HTML
+  else Exact title is not in pt.index
+    Flask->>Jinja: Render no-match feedback
+    Jinja-->>Browser: HTTP 404 HTML
+  else Exact title is found
+    Flask->>Model: Read matching similarity row
+    Model-->>Flask: Ranked score vector
+    Flask->>Model: Resolve candidate metadata
+    Model-->>Flask: Title, author, cover URL
+    Flask->>Jinja: Render recommendation cards
+    Jinja-->>Browser: HTTP 200 HTML
+  end
+  Note over Flask,Model: Trusted pickle artifacts are loaded at application import
