@@ -11,7 +11,7 @@ The pytest suite checks Jinja rendering and escaping, plus key Flask routes usin
 | Static | Python compilation | CI checks app and test syntax |
 | Template | Jinja rendering and escaping | Basic pytest coverage added |
 | Unit | Input validation and ranking helpers | Not implemented |
-| Integration | Flask test client and route behavior | Not implemented |
+| Integration | Flask test client and route behavior | Basic route coverage with mocked artifacts |
 | Artifact contract | Schema, dimensions, hashes, row alignment | Not implemented |
 | Model evaluation | Precision@K, Recall@K, NDCG@K, coverage | Not implemented |
 | Operations | WSGI startup, memory, readiness | Manual guidance only |
@@ -29,7 +29,7 @@ pip install -r requirements-dev.txt
 Run:
 
 ```bash
-python -m py_compile app.py tests/test_templates.py
+python -m py_compile app.py tests/test_templates.py tests/test_app.py
 pytest -q
 ```
 
