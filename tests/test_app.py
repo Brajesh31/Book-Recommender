@@ -88,3 +88,9 @@ def test_known_title_returns_top_similar_books(client):
     assert b"Book B" in response.data
     assert b"Book E" in response.data
     assert b"Seed Book" not in response.data
+
+
+def test_oversized_title_returns_validation_error(client):
+    response = client.post("/recommend_books", data={"user_input": "x" * 201})
+    assert response.status_code == 400
+    assert b"200 characters or fewer" in response.data
