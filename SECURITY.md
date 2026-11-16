@@ -17,10 +17,10 @@ Include, where possible, the affected commit or file, impact, sanitized reproduc
 ## Security-sensitive implementation notes
 
 - `app.py` loads `popular.pkl`, `pt.pkl`, `books.pkl`, and `similarity_scores.pkl` with Python `pickle` when the module is imported. Pickle deserialization can execute code. Load only trusted artifacts from a controlled source; never accept a user-supplied pickle.
-- Running `python app.py` enables Flask debug mode. The built-in development server and debugger must not be exposed to the internet. Use a production WSGI server such as Gunicorn with debug disabled and production network controls.
-- The recommendation route assumes the submitted book title exists in the model index. Unknown or missing input currently raises an indexing error. Add validation and safe error handling before exposing the service publicly; do not depend on debug pages for diagnostics.
+- The direct-run entry point now uses `debug=False`. Do not expose Flask's development server; use a production WSGI server such as Gunicorn with production network controls.
+- The recommendation route validates blank and unknown titles and returns HTTP 400/404 feedback. Matching remains exact and case-sensitive; retain tests for malformed and boundary inputs.
 - `Users.csv` contains user IDs, location, and age fields, and the rating data is linked to user IDs. Handle the source data and derived rating artifacts as potentially sensitive. Verify provenance, rights, and privacy requirements before republishing or deploying them.
 - Cover images use URLs from the dataset, so requests go to external image hosts. Account for those third-party requests in privacy and deployment decisions.
-- Do not commit secrets, local environment files, personal dataset extracts, logs, or production data. The current app does not require an application secret for its read-only routes; add secret configuration only when a real feature needs it.
+- The handler no longer prints recommendation result records. Do not commit secrets, local environment files, personal dataset extracts, logs, or production data. The current app does not require an application secret for its read-only routes; add secret configuration only when a real feature needs it.
 
 See [Deployment](docs/deployment.md) for production setup and [Database and data files](docs/database.md) for dataset handling notes.
