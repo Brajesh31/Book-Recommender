@@ -2,7 +2,7 @@
 
 ## 1. Current status
 
-A small template-level pytest suite now checks that both Jinja pages render with representative data and that untrusted text is escaped. It deliberately does not import `app.py`, because importing the application immediately deserializes the four pickle artifacts. The current tests do not verify route behavior, artifact integrity, recommendation relevance, or accessibility conformance.
+The pytest suite checks Jinja rendering and escaping, plus key Flask routes using mocked in-memory artifacts. The route fixture replaces pickle loading before importing `app.py`, so tests do not deserialize production model files. The tests do not verify real artifact integrity, recommendation relevance, or accessibility conformance.
 
 ## 2. Test layers
 
@@ -35,15 +35,15 @@ pytest -q
 
 The quality workflow also compiles the Jinja templates and checks that key documentation and SVG assets exist.
 
-## 4. Existing template scenarios
+## 4. Existing test scenarios
 
 - Home template renders a representative popular-book card.
 - Recommendation template renders a recommendation result.
-- Recommendation template escapes HTML-like user-controlled text.
+- Recommendation template escapes HTML-like user-controlled text.\n- Home route renders popular-book data with mocked artifacts.\n- Recommendation form renders its visible label.\n- Blank title returns HTTP 400.\n- Unknown title returns HTTP 404.\n- Known title returns similar-book cards without returning the selected title.
 
-## 5. Route tests to add
+## 5. Additional route and model tests to add
 
-After refactoring application initialization to inject trusted test artifacts without importing production pickle files:
+Further tests should cover:
 - `GET /` renders the popular-books list.
 - `GET /recommend` renders the form.
 - valid `POST /recommend_books` returns result cards.
