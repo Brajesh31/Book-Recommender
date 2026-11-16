@@ -2,70 +2,66 @@
 
 ## 1. Current status
 
-The repository does not currently include a test directory or a declared test command. The application can be syntax-checked, but that alone does not verify route behavior, templates, artifact compatibility, or recommendation quality.
+A small template-level pytest suite now checks that both Jinja pages render with representative data and that untrusted text is escaped. It deliberately does not import `app.py`, because importing the application immediately deserializes the four pickle artifacts. The current tests do not verify route behavior, artifact integrity, recommendation relevance, or accessibility conformance.
 
-## 2. Test layers to add
+## 2. Test layers
 
-| Layer | Scope | Example checks |
+| Layer | Scope | Current state |
 |---|---|---|
-| Static | Python source | Compilation, lint, dependency checks |
-| Unit | Input and ranking helpers | Blank title, exact match, no match, score ordering |
-| Integration | Flask test client | Home, form page, POST success, POST error |
-| Template | Jinja rendering | Escaping, missing images, accessible labels |
-| Artifact contract | Pickle objects | Required columns, row counts, dimensions, alignment |
-| Model evaluation | Offline recommender | Precision@K, Recall@K, NDCG@K, coverage |
-| Operations | Deployment | WSGI startup, worker memory, model availability |
-| Accessibility | Browser flow | Keyboard, focus, labels, contrast, screen reader |
+| Static | Python compilation | CI checks app and test syntax |
+| Template | Jinja rendering and escaping | Basic pytest coverage added |
+| Unit | Input validation and ranking helpers | Not implemented |
+| Integration | Flask test client and route behavior | Not implemented |
+| Artifact contract | Schema, dimensions, hashes, row alignment | Not implemented |
+| Model evaluation | Precision@K, Recall@K, NDCG@K, coverage | Not implemented |
+| Operations | WSGI startup, memory, readiness | Manual guidance only |
+| Accessibility | Keyboard, focus, labels, contrast, screen reader | Manual checklist documented |
 
-## 3. Immediate smoke checks
+## 3. Run checks locally
 
-Run from the project root after installing dependencies and retrieving Git LFS objects:
+Install runtime and development dependencies:
 
 ```bash
-python -m py_compile app.py
-python -c "import flask, numpy, pandas; print('runtime imports ok')"
+pip install -r requirements.txt
+pip install -r requirements-dev.txt
 ```
 
-These checks do not execute a valid recommendation request or validate untrusted artifacts. Only import the app after confirming pickle files are trusted.
+Run:
 
-## 4. Flask test scenarios
+```bash
+python -m py_compile app.py tests/test_templates.py
+pytest -q
+```
 
-After refactoring app initialization to permit injected test artifacts, cover:
+The quality workflow also compiles the Jinja templates and checks that key documentation and SVG assets exist.
+
+## 4. Existing template scenarios
+
+- Home template renders a representative popular-book card.
+- Recommendation template renders a recommendation result.
+- Recommendation template escapes HTML-like user-controlled text.
+
+## 5. Route tests to add
+
+After refactoring application initialization to inject trusted test artifacts without importing production pickle files:
 - `GET /` renders the popular-books list.
 - `GET /recommend` renders the form.
 - valid `POST /recommend_books` returns result cards.
 - empty title returns validation feedback.
 - unknown title returns no-match feedback, not an exception.
-- malformed metadata rows do not crash template rendering.
-- missing or incompatible model artifacts fail with an actionable startup error.
+- missing or incompatible artifacts fail with an actionable startup error.
 - no raw stack trace is shown to visitors.
 
-## 5. Model artifact contract checks
+## 6. Artifact contract tests
 
-Before deployment, assert:
-- the expected files exist and are not Git LFS pointer text,
-- the popularity table contains required columns,
-- the pivot table has a title index,
-- the similarity matrix is two-dimensional,
-- matrix row count equals `len(pt.index)`,
-- all values are finite and valid for sorting,
-- title metadata can be resolved for selected candidates,
-- all artifacts share one build manifest.
+Before deployment, verify that expected files exist and are real Git LFS objects; the popularity table has required columns; the pivot table has a title index; the similarity matrix is two-dimensional; matrix row count equals `len(pt.index)`; values are finite; metadata resolves for candidates; and all artifacts share one build manifest.
 
-## 6. Dependency and security checks
+Only load pickle files from a trusted source. Do not execute artifact validation against untrusted pickle input.
 
-A CI workflow should install the declared dependencies, compile Python files, compile Jinja templates, and scan for accidentally committed secrets. Add dependency vulnerability scanning and a lockfile once a supported dependency policy is selected.
+## 7. Accessibility and security checks
 
-## 7. Test evidence format
+Add browser-level checks for keyboard navigation, visible focus, labels, error announcements, contrast, zoom, and screen-reader behavior. Add dependency and secret scanning. Automated checks complement, but do not replace, manual review.
 
-For each release, record:
-- commit SHA,
-- Python version and platform,
-- dependency installation result,
-- commands executed,
-- route test results,
-- artifact manifest/checksum results,
-- model evaluation protocol and results if relevant,
-- known failures and skipped checks.
+## 8. Evidence format
 
-Do not represent a check as passing unless it was actually run.
+For each release, record commit SHA, Python version, platform, dependency install result, commands executed, route results, artifact manifest/checksum results, model evaluation protocol, accessibility review, failures, and skipped checks. Never mark an unexecuted check as passed.
