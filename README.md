@@ -348,3 +348,5 @@ The project source is provided under the MIT License. See [LICENSE](LICENSE). Th
 <p align="center">
   Built for book discovery 📚 · <a href="docs/README.md">Explore the documentation</a> · <a href="CONTRIBUTING.md">Contribute</a>
 </p>
+
+Last updated: 2026-11-16 20:10 UTC
