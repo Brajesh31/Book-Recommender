@@ -1,46 +1,83 @@
 # 📚 Documentation Hub
 
-Welcome to the **Bookwish / Book Recommendation System** documentation. This directory explains the current Flask application, its offline collaborative-filtering workflow, data artifacts, deployment requirements, and quality requirements.
+Welcome to the **Bookwish / Book Recommendation System** documentation. These guides describe the checked-in Flask app, offline collaborative-filtering workflow, source data, pickle artifacts, deployment, security, privacy, accessibility, and maintenance.
 
 > [!IMPORTANT]
-> This documentation describes the checked-in implementation. It does not imply that planned validation, authentication, monitoring, accessibility testing, or retraining automation already exists.
+> This documentation distinguishes implemented behavior from recommendations and future work. No unverified feature, benchmark, accessibility conformance, or data license is presented as fact.
 
-## 🧭 Start here
-
-| Goal | Guide |
+## 🧭 Product and engineering
+| Topic | Guide |
 |---|---|
-| Understand the product and limits | [Overview](overview.md) |
-| Understand components and data flow | [Architecture](architecture.md) |
-| Install and run locally | [Installation](installation.md) |
-| Change the Flask app or notebook | [Development](development.md) |
-| Understand model generation | [Model methodology](model-methodology.md) |
-| Understand CSV and pickle assets | [Data dictionary](data-dictionary.md) |
-| Inspect the HTML routes | [HTTP routes](api.md) |
-| Deploy behind a WSGI server | [Deployment](deployment.md) |
-| Review privacy and data handling | [Privacy](privacy.md) |
-| Assess application security | [Security review](security.md) |
-| Improve accessible interactions | [Accessibility](accessibility.md) |
-| Test code, templates, and artifacts | [Testing](testing.md) |
-| Operate and update a deployment | [Operations](operations.md) |
-| Diagnose errors | [Troubleshooting](troubleshooting.md) |
+| Product scope | [Overview](overview.md) |
+| Functional and non-functional requirements | [Requirements](requirements.md) |
+| Architecture | [Architecture](architecture.md) |
+| Project structure | [Project structure](project-structure.md) |
+| Development workflow | [Development](development.md) |
+| Application workflows | [Workflows](workflows.md) |
 
-## 🗺️ Diagrams
+## 🚀 Setup and runtime
+| Topic | Guide |
+|---|---|
+| Installation | [Installation](installation.md) |
+| Configuration | [Configuration](configuration.md) |
+| Useful commands | [Commands](commands.md) |
+| Usage examples | [Examples](examples.md) |
+| HTTP routes | [API](api.md) |
+| Deployment | [Deployment](deployment.md) |
+| Release procedure | [Release process](release-process.md) |
 
-- [System architecture](diagrams/architecture.mmd)
-- [Training and inference pipeline](diagrams/recommendation-pipeline.mmd)
+## 🧠 Data and recommendation model
+| Topic | Guide |
+|---|---|
+| Data files and persistence | [Database](database.md) |
+| Data fields and artifact lineage | [Data dictionary](data-dictionary.md) |
+| Model generation and evaluation | [Model methodology](model-methodology.md) |
+| Dependencies | [Dependencies](dependencies.md) |
+
+## 🛡️ Quality, risk, and operations
+| Topic | Guide |
+|---|---|
+| Security review | [Security](security.md) |
+| Threat model | [Threat model](threat-model.md) |
+| Privacy | [Privacy](privacy.md) |
+| Accessibility | [Accessibility](accessibility.md) |
+| Testing | [Testing](testing.md) |
+| Performance | [Performance](performance.md) |
+| Compatibility | [Compatibility](compatibility.md) |
+| Error behavior | [Error handling](error-handling.md) |
+| Logging | [Logging](logging.md) |
+| Monitoring | [Monitoring](monitoring.md) |
+| Operations | [Operations](operations.md) |
+| Backup and recovery | [Backup and recovery](backup-recovery.md) |
+
+## 🧰 Maintenance and support
+| Topic | Guide |
+|---|---|
+| Known limitations | [Limitations](limitations.md) |
+| Technical debt | [Technical debt](technical-debt.md) |
+| Troubleshooting | [Troubleshooting](troubleshooting.md) |
+| Frequently asked questions | [FAQ](faq.md) |
+| Glossary | [Glossary](glossary.md) |
+| References | [References](references.md) |
+
+## 🗺️ Diagrams and visual assets
+- [Architecture source](diagrams/architecture.mmd)
+- [Recommendation pipeline](diagrams/recommendation-pipeline.mmd)
 - [Request sequence](diagrams/request-sequence.mmd)
-- [Data relationships](diagrams/data-lineage.mmd)
-- [SVG visual assets](../assets/diagrams/README.md)
+- [Data lineage](diagrams/data-lineage.mmd)
+- [Rendered SVG catalogue](../assets/diagrams/README.md)
 
-## 🧰 Working agreements
+## 📝 Reusable templates
+See [templates/README.md](templates/README.md) for architecture decisions, feature proposals, test plans, incident reports, data registers, model build records, release checklists, security findings, and documentation changes.
 
-- Do not load pickle artifacts from untrusted sources.
-- Keep the four runtime pickle files from one compatible model build.
-- Verify dataset and image rights independently of the MIT source license.
-- Do not expose Flask debug mode to a network.
-- Record test evidence for behavior changes.
-- Preserve Git LFS attributes for large data and model files.
+## 📌 Project-level policies
+- [Contributing](../CONTRIBUTING.md)
+- [Code of Conduct](../CODE_OF_CONDUCT.md)
+- [Security Policy](../SECURITY.md)
+- [Support](../SUPPORT.md)
+- [License](../LICENSE)
+- [Changelog](../CHANGELOG.md)
+- [Roadmap](../ROADMAP.md)
 
-## 📝 Templates
-
-Reusable issue, pull request, incident, test, and decision templates live in [templates/](templates/README.md).
+## 🧭 Documentation maintenance
+Update the relevant guide whenever a route, artifact contract, model filter, dependency, deployment process, privacy practice, or user-facing behavior changes. Verify commands and links before merging. Keep diagrams aligned with the current source code.
