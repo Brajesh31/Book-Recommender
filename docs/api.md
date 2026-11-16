@@ -16,7 +16,7 @@ Submits standard form data.
 
 | Field | Required | Validation | Description |
 |---|---|---|---|
-| `user_input` | Yes | Trimmed, non-empty, maximum 200 characters in the HTML form | Exact title in the trained pivot index |
+| `user_input` | Yes | Trimmed, non-empty, maximum 200 characters (validated by the server and HTML form) | Exact title in the trained pivot index |
 
 Example:
 
@@ -31,7 +31,7 @@ For a match, the handler ranks the similarity row, excludes the selected title b
 
 | Condition | Current response |
 |---|---|
-| Blank title | HTTP 400 with an accessible validation message |
+| Blank title | HTTP 400 with an accessible validation message |\n| Title longer than 200 characters | HTTP 400 with a length validation message |
 | Unknown title | HTTP 404 with an exact-match explanation |
 | Similarity row missing | HTTP 503 with a generic availability message |
 | Known title | HTTP 200 with recommendation cards |
