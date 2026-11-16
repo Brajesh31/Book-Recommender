@@ -1,12 +1,24 @@
 # 🗺️ Diagram Catalogue
 
-The Mermaid source diagrams in this folder document the actual current app and data-preparation flow.
+These Mermaid sources describe the actual current Flask application and offline data-preparation workflow.
 
-| Diagram | What it shows |
-|---|---|
-| [Architecture](architecture.mmd) | Runtime components and offline model build |
-| [Recommendation pipeline](recommendation-pipeline.mmd) | Training artifacts and online inference |
-| [Request sequence](request-sequence.mmd) | Browser-to-Flask interaction |
-| [Data lineage](data-lineage.mmd) | CSV and pickle relationships |
+| Diagram | What it shows | Rendered visual |
+|---|---|---|
+| [Architecture](architecture.mmd) | Runtime components and offline model build | [architecture.svg](../../assets/diagrams/architecture.svg) |
+| [Recommendation pipeline](recommendation-pipeline.mmd) | Training artifacts and online inference | [recommendation-flow.svg](../../assets/diagrams/recommendation-flow.svg) |
+| [Request sequence](request-sequence.mmd) | Browser-to-Flask interaction | Mermaid source |
+| [Data lineage](data-lineage.mmd) | CSV and pickle relationships | [data-lineage.svg](../../assets/diagrams/data-lineage.svg) |
 
-The rendered SVG equivalents are in [assets/diagrams](../../assets/diagrams/README.md). Update source and rendered versions together when architecture changes.
+## Architecture preview
+
+![Bookwish system architecture](../../assets/diagrams/architecture.svg)
+
+## Recommendation preview
+
+![Book recommendation flow](../../assets/diagrams/recommendation-flow.svg)
+
+## Data lineage preview
+
+![Data lineage](../../assets/diagrams/data-lineage.svg)
+
+Update Mermaid source and rendered SVG versions together when architecture or behavior changes. These are explanatory diagrams, not screenshots of a live deployment.
