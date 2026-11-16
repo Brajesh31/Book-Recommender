@@ -8,17 +8,15 @@
   <b>A Flask-based book discovery demo powered by precomputed item-item collaborative filtering.</b>
 </p>
 
-<p align="center">
-  [![Quality](https://github.com/Brajesh31/Book-Recommender/actions/workflows/quality.yml/badge.svg)](https://github.com/Brajesh31/Book-Recommender/actions/workflows/quality.yml)
-  [![Security Audit](https://github.com/Brajesh31/Book-Recommender/actions/workflows/security.yml/badge.svg)](https://github.com/Brajesh31/Book-Recommender/actions/workflows/security.yml)
-  ![Python](https://img.shields.io/badge/Python-3.x-3776AB?logo=python&logoColor=white)
-  ![Flask](https://img.shields.io/badge/Flask-Web%20App-000000?logo=flask&logoColor=white)
-  ![NumPy](https://img.shields.io/badge/NumPy-Arrays-013243?logo=numpy&logoColor=white)
-  ![Pandas](https://img.shields.io/badge/Pandas-Data%20Processing-150458?logo=pandas&logoColor=white)
-  ![License](https://img.shields.io/badge/License-MIT-green.svg)
-  [![Issues](https://img.shields.io/github/issues/Brajesh31/Book-Recommender)](https://github.com/Brajesh31/Book-Recommender/issues)
-  [![Stars](https://img.shields.io/github/stars/Brajesh31/Book-Recommender)](https://github.com/Brajesh31/Book-Recommender/stargazers)
-</p>
+[![Quality](https://github.com/Brajesh31/Book-Recommender/actions/workflows/quality.yml/badge.svg)](https://github.com/Brajesh31/Book-Recommender/actions/workflows/quality.yml)
+[![Security Audit](https://github.com/Brajesh31/Book-Recommender/actions/workflows/security.yml/badge.svg)](https://github.com/Brajesh31/Book-Recommender/actions/workflows/security.yml)
+![Python](https://img.shields.io/badge/Python-3.x-3776AB?logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-Web%20App-000000?logo=flask&logoColor=white)
+![NumPy](https://img.shields.io/badge/NumPy-Arrays-013243?logo=numpy&logoColor=white)
+![Pandas](https://img.shields.io/badge/Pandas-Data%20Processing-150458?logo=pandas&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
+[![Issues](https://img.shields.io/github/issues/Brajesh31/Book-Recommender)](https://github.com/Brajesh31/Book-Recommender/issues)
+[![Stars](https://img.shields.io/github/stars/Brajesh31/Book-Recommender)](https://github.com/Brajesh31/Book-Recommender/stargazers)
 
 > [!IMPORTANT]
 > **Project status: educational/demo application.** The current app requires an exact, case-sensitive title match. Unknown or blank titles can raise an unhandled error. It loads Python pickle artifacts at import time and enables Flask debug mode when run directly. Do not expose the development server or load untrusted pickle files. Read [Security](SECURITY.md) before deployment.
