@@ -1,0 +1,15 @@
+sequenceDiagram
+  actor Visitor
+  participant Browser
+  participant Flask as Flask app.py
+  participant Model as In-memory pickle objects
+  participant Jinja as Jinja templates
+  Visitor->>Browser: Enter a book title
+  Browser->>Flask: POST /recommend_books
+  Flask->>Model: Find exact title in pt.index
+  Model-->>Flask: Index position and similarity row
+  Flask->>Model: Resolve top candidate metadata
+  Model-->>Flask: Title, author, cover URL
+  Flask->>Jinja: Render recommendation page
+  Jinja-->>Browser: HTML response
+  Note over Flask,Model: Current unknown-title handling can raise IndexError
