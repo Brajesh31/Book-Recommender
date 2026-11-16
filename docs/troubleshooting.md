@@ -14,7 +14,7 @@ Use the artifact set produced together by the project's workflow and install the
 
 ## The recommendation page returns an error
 
-The current form expects a title that exactly matches an entry in pt.index. Check spelling, punctuation, and whitespace. The handler does not handle blank or unknown titles gracefully and may raise an index error. This is a known application limitation, not a database lookup problem.
+The form expects a title that exactly matches an entry in pt.index. Check spelling, punctuation, case, and whitespace. Blank input returns HTTP 400 and an unknown title returns HTTP 404 with a message. Fuzzy matching is not implemented.
 
 ## The notebook reports that a file does not exist
 
