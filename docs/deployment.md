@@ -12,7 +12,7 @@ Install requirements.txt in a Linux environment and start the WSGI application f
 gunicorn --workers 2 --bind 0.0.0.0:8000 app:app
 ~~~
 
-Choose worker count based on available memory because each worker can load its own copy of the artifacts. The command is an example; set the bind address, worker count, process supervision, TLS termination, and resource limits to match the hosting platform. Do not expose Flask's development server or run the app with debug mode enabled in production.
+Choose worker count based on available memory because each worker can load its own copy of the artifacts. The command is an example; set the bind address, worker count, process supervision, TLS termination, and resource limits to match the hosting platform. The direct-run entry point now uses debug=False. Do not expose Flask's development server; use Gunicorn or a managed WSGI server in production.
 
 ## Release contents
 
@@ -22,7 +22,7 @@ The app uses relative artifact paths, so configure the service working directory
 
 ## Configuration, privacy, and operations
 
-No environment variables are currently read by the application; .env.example does not define runtime settings. Do not put credentials or private values in a public repository. The app prints recommendation results to stdout; review logging behavior before deployment and avoid collecting user-submitted text unnecessarily.
+No environment variables are currently read by the application; .env.example does not define runtime settings. Do not put credentials or private values in a public repository. The recommendation handler no longer prints result records. Configure hosting logs to avoid collecting submitted titles or personal data unnecessarily.
 
 The bundled datasets contain user IDs, locations, ages, and ratings. Review their provenance, terms, and privacy obligations before deploying or redistributing them. Cover images are loaded from remote URLs, so the page depends on those image hosts and on the continued validity of the URLs.
 
