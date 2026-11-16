@@ -9,6 +9,8 @@
 </p>
 
 <p align="center">
+  [![Quality](https://github.com/Brajesh31/Book-Recommender/actions/workflows/quality.yml/badge.svg)](https://github.com/Brajesh31/Book-Recommender/actions/workflows/quality.yml)
+  [![Security Audit](https://github.com/Brajesh31/Book-Recommender/actions/workflows/security.yml/badge.svg)](https://github.com/Brajesh31/Book-Recommender/actions/workflows/security.yml)
   ![Python](https://img.shields.io/badge/Python-3.x-3776AB?logo=python&logoColor=white)
   ![Flask](https://img.shields.io/badge/Flask-Web%20App-000000?logo=flask&logoColor=white)
   ![NumPy](https://img.shields.io/badge/NumPy-Arrays-013243?logo=numpy&logoColor=white)
@@ -278,7 +280,7 @@ The notebook currently reads CSV files from a Colab-style `/content/` path. Loca
 
 ## 🧪 Testing and quality
 
-The repository currently has no application test suite. A GitHub Actions quality workflow checks Python syntax, Jinja template compilation, and the presence of core documentation. A separate scheduled security workflow audits declared Python dependencies.
+A small pytest suite checks Jinja template rendering and HTML escaping. It does not yet exercise Flask routes, load model artifacts, evaluate recommendation quality, or verify accessibility. The GitHub Actions quality workflow runs these tests, compiles Python and Jinja templates, and checks core docs/assets. A separate scheduled security workflow audits declared Python dependencies.
 
 Run the basic local checks:
 
@@ -329,7 +331,7 @@ See the detailed [Limitations Register](docs/limitations.md) and [Technical Debt
 | Operations and deployment | [Operations](docs/operations.md) · [Deployment](docs/deployment.md) · [Release Process](docs/release-process.md) |
 | Errors and support | [Error Handling](docs/error-handling.md) · [Troubleshooting](docs/troubleshooting.md) · [FAQ](docs/faq.md) |
 | Maintenance | [Dependencies](docs/dependencies.md) · [Technical Debt](docs/technical-debt.md) · [Limitations](docs/limitations.md) |
-| Reference | [Commands](docs/commands.md) · [Examples](docs/examples.md) · [Glossary](docs/glossary.md) |
+| Reference | [Commands](docs/commands.md) · [Examples](docs/examples.md) · [Glossary](docs/glossary.md) · [References](docs/references.md) |
 
 ## 🤝 Contributing
 
