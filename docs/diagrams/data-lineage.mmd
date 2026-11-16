@@ -1,0 +1,12 @@
+flowchart LR
+  B["Books.csv<br/>metadata"] --> F["Notebook transformations"]
+  R["Ratings.csv<br/>user/item ratings"] --> F
+  U["Users.csv<br/>user attributes"] -. "exploration" .-> F
+  F --> POP["popular.pkl"]
+  F --> PIV["pt.pkl"]
+  F --> META["books.pkl"]
+  F --> SIM["similarity_scores.pkl"]
+  PIV --> ALIGN["Index-to-row alignment"]
+  SIM --> ALIGN
+  META --> ALIGN
+  ALIGN --> WEB["Rendered recommendations"]
