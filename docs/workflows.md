@@ -7,11 +7,11 @@ flowchart TD
   B --> C[Open Recommend]
   C --> D[Enter exact book title]
   D --> E[Submit form]
-  E --> F{Title in pt.index?}
+  E --> V{Blank or over 200 chars?}\n  V -->|Yes| X[Return HTTP 400 validation feedback]\n  V -->|No| F{Title in pt.index?}
   F -->|Yes| G[Rank similarity scores]
   G --> H[Resolve book metadata]
   H --> I[Render up to four results]
-  F -->|No| J[Current code may raise IndexError]
+  F -->|No| J[Return HTTP 404 no-match feedback]
 ```
 
 ## Offline model workflow
