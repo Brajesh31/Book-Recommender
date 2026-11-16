@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   quality:
-    name: Syntax and template checks
+    name: Syntax, templates, and template tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository with LFS
@@ -24,15 +24,21 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
-          cache-dependency-path: requirements.txt
+          cache-dependency-path: |
+            requirements.txt
+            requirements-dev.txt
 
-      - name: Install runtime dependencies
+      - name: Install runtime and development dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install -r requirements-dev.txt
 
       - name: Compile Python source
-        run: python -m py_compile app.py
+        run: python -m py_compile app.py tests/test_templates.py
+
+      - name: Run template tests
+        run: pytest -q
 
       - name: Compile Jinja templates
         run: |
@@ -44,7 +50,7 @@ jobs:
               print(f"OK: {name}")
           PY
 
-      - name: Check required documentation files
+      - name: Check required documentation and assets
         run: |
           test -s README.md
           test -s docs/README.md
@@ -53,3 +59,6 @@ jobs:
           test -s CODE_OF_CONDUCT.md
           test -s docs/architecture.md
           test -s docs/accessibility.md
+          test -s assets/diagrams/architecture.svg
+          test -s assets/diagrams/recommendation-flow.svg
+          test -s assets/diagrams/data-lineage.svg
