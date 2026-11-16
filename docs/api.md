@@ -1,36 +1,44 @@
-# Application routes
+# 🌐 Application Routes and Request Contract
 
-The current project exposes HTML pages through Flask. It does not define a versioned JSON API, API authentication, or a formal compatibility guarantee.
+The application exposes three server-rendered HTML routes. It does not define a versioned JSON API, API authentication, or a formal compatibility guarantee.
 
 ## GET /
 
-Renders the popular-books page from popular.pkl. The template receives book titles, authors, medium cover image URLs, rating counts, and average ratings. This route requires a valid popular.pkl with the expected columns.
+Renders the popular-books page using columns from `popular.pkl`: title, author, medium cover URL, rating count, and average rating. A missing or incompatible artifact can prevent application startup or page rendering.
 
 ## GET /recommend
 
-Renders the recommendation form. The route does not currently provide a JSON response or populate a server-side list of valid title values.
+Renders the recommendation form. The form includes a required title field and a visible label. It explains that matching is exact and case-sensitive.
 
 ## POST /recommend_books
 
-Submits the recommendation form as standard form data.
+Submits standard form data.
 
-| Field | Required by current handler | Description |
-| --- | --- | --- |
-| user_input | Yes in practice | Exact book title to look up in the collaborative-filtering index |
+| Field | Required | Validation | Description |
+|---|---|---|---|
+| `user_input` | Yes | Trimmed, non-empty, maximum 200 characters in the HTML form | Exact title in the trained pivot index |
 
-Example form request:
+Example:
 
-~~~sh
+```bash
 curl -X POST http://127.0.0.1:5000/recommend_books \
-  --data-urlencode "user_input=The title as indexed"
-~~~
+  --data-urlencode "user_input=EXACT TITLE FROM MODEL INDEX"
+```
 
-When the title matches pt.index, the handler ranks its similarity-score row, skips the input title, selects up to four results, looks up each result's title, author, and image in books.pkl, and renders recommend.html with the data. Results are server-rendered HTML, not JSON.
+For a match, the handler ranks the similarity row, excludes the selected title by index, resolves metadata, and renders up to four cards.
 
-## Current error behavior
+## Status and error behavior
 
-The handler does not validate blank or unknown titles before indexing the match array. Such input can raise an IndexError and produce a server error. Missing or malformed pickle artifacts can also prevent the application from starting. A future behavior change should return a user-friendly validation message and document any API contract before adding non-browser clients.
+| Condition | Current response |
+|---|---|
+| Blank title | HTTP 400 with an accessible validation message |
+| Unknown title | HTTP 404 with an exact-match explanation |
+| Similarity row missing | HTTP 503 with a generic availability message |
+| Known title | HTTP 200 with recommendation cards |
+| No candidate metadata | HTTP 200 with a no-results message |
 
-## Operational notes
+The endpoint returns HTML, not JSON. The application does not currently normalize title case or perform fuzzy matching. The browser's required/max-length attributes improve form validation, while the server also checks for blank and unknown titles.
 
-The app currently prints recommendation data to standard output. Do not send personal or confidential information in submitted titles, and review logging before operating the service publicly.
+## Operational and security notes
+
+The four pickle artifacts are still loaded during module import. Missing or malformed artifacts can prevent startup, and untrusted pickle files can execute code. The direct-run development entry point now disables debug mode by default; production should still use Gunicorn or a managed WSGI server. See [Security](security.md) and [Deployment](deployment.md).
