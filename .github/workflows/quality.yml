@@ -35,7 +35,7 @@ jobs:
           pip install -r requirements-dev.txt
 
       - name: Compile Python source
-        run: python -m py_compile app.py tests/test_templates.py
+        run: python -m py_compile app.py tests/test_templates.py tests/test_app.py
 
       - name: Run template tests
         run: pytest -q
